@@ -1,20 +1,16 @@
 // ============================================
 // LAYOUT PRINCIPAL DA APLICAÇÃO
 // ============================================
-// Este arquivo envolve TODAS as páginas do
-// projeto. É aqui que importamos as fontes,
-// definimos o título da aba do navegador e
-// adicionamos elementos que aparecem em todas
-// as telas (como o menu lateral).
+// Agora importamos o componente Sidebar real
+// no lugar dos placeholders que tínhamos antes.
 
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import Sidebar from '@/components/Sidebar'
 
-// Fonte principal do projeto
 const inter = Inter({ subsets: ['latin'] })
 
-// Metadados que aparecem na aba do navegador
 export const metadata: Metadata = {
   title: 'Analytics Dashboard',
   description: 'Dashboard unificado de marketing e analytics',
@@ -23,30 +19,15 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode  // representa a página atual sendo exibida
+  children: React.ReactNode
 }) {
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        {/* 
-          Layout de 3 colunas conforme o esboço:
-          - Sidebar (Quadro 1): menu de navegação
-          - Main (Quadro 2): área dos gráficos
-          - AIPanel (Quadro 3): painel de IA
-          Por enquanto placeholders — vamos construir cada um
-        */}
         <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
 
-          {/* QUADRO 1 — Menu lateral */}
-          <aside className="w-16 bg-gray-900 border-r border-gray-800 flex flex-col items-center py-4 gap-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg" />
-            <nav className="flex flex-col gap-2 mt-4">
-              <div className="w-8 h-8 bg-gray-700 rounded-lg" />
-              <div className="w-8 h-8 bg-gray-700 rounded-lg" />
-              <div className="w-8 h-8 bg-gray-700 rounded-lg" />
-              <div className="w-8 h-8 bg-gray-700 rounded-lg" />
-            </nav>
-          </aside>
+          {/* QUADRO 1 — Sidebar com navegação real */}
+          <Sidebar />
 
           {/* QUADRO 2 — Área principal dos gráficos */}
           <main className="flex-1 overflow-y-auto p-6">
