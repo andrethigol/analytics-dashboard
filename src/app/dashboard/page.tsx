@@ -1,17 +1,16 @@
 // ============================================
 // PÁGINA PRINCIPAL DO DASHBOARD
 // ============================================
-// Esta é a página que aparece em
-// localhost:3000/dashboard
-// Por enquanto vamos colocar cards de métricas
-// estáticas para montar a estrutura visual.
-// Depois vamos substituir pelos dados reais das APIs.
+// Agora importamos o componente Charts real
+// no lugar dos placeholders anteriores.
+
+import Charts from '@/components/Charts'
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
 
-      {/* Cabeçalho da página */}
+      {/* Cabeçalho */}
       <div>
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         <p className="text-gray-400 text-sm mt-1">
@@ -19,7 +18,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* LINHA DE CARDS — métricas rápidas */}
+      {/* Cards de métricas rápidas */}
       <div className="grid grid-cols-4 gap-4">
 
         <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
@@ -48,18 +47,8 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* ÁREA DOS GRÁFICOS — placeholder por enquanto */}
-      <div className="grid grid-cols-2 gap-4">
-
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800 h-64 flex items-center justify-center">
-          <p className="text-gray-600 text-sm">Gráfico Google Analytics (em breve)</p>
-        </div>
-
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800 h-64 flex items-center justify-center">
-          <p className="text-gray-600 text-sm">Gráfico Meta Ads (em breve)</p>
-        </div>
-
-      </div>
+      {/* Gráficos */}
+      <Charts />
 
     </div>
   )
