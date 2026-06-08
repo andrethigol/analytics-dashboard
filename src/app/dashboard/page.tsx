@@ -3,79 +3,73 @@
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import Charts from '@/components/Charts'
+import AIPanel from '@/components/AIPanel'
 import { useAnalytics } from '@/lib/useAnalytics'
 
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-  const s = Math.floor(seconds % 60)
-  return `${m}m ${s}s`
+function fmt(s: number): string {
+  const m = Math.floor(s / 60)
+  const sc = Math.floor(s % 60)
+  return m + 'm ' + sc + 's'
 }
 
-function formatNumber(n: number): string {
+function fmtn(n: number): string {
   return n.toLocaleString('pt-BR')
 }
 
 function DashboardContent() {
   const searchParams = useSearchParams()
   const userId = searchParams.get('userId')
+  const authStatus = searchParams.get('auth')
   const { metrics, chartData, properties, loading, error } = useAnalytics(userId)
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-gray-400 text-sm mt-1">
-          {properties[0]?.displayName || 'Visão geral de todas as plataformas'}
-        </p>
+    <div className='flex h-full'>
+      <div className='flex-1 overflow-y-auto p-6 space-y-6'>
+        <div>
+          <h1 className='text-2xl font-bold text-white'>Dashboard</h1>
+          <p className='text-gray-400 text-sm mt-1'>
+            {properties[0]?.displayName || 'Visao geral de todas as plataformas'}
+          </p>
+        </div>
+        {authStatus === 'success' && (
+          <span className='text-xs bg-green-900 text-green-300 px-3 py-1 rounded-full'>
+            Google conectado
+          </span>
+        )}
+        {loading && <p className='text-gray-400 text-sm animate-pulse'>Buscando dados reais...</p>}
+        {error && <p className='text-red-400 text-sm'>{error}</p>}
+        <div className='grid grid-cols-4 gap-4'>
+          <div className='bg-gray-900 rounded-xl p-4 border border-gray-800'>
+            <p className='text-xs text-gray-400 uppercase tracking-wider'>Usuarios Ativos</p>
+            <p className='text-2xl font-bold text-white mt-1'>{metrics ? fmtn(metrics.activeUsers) : '--'}</p>
+            <p className='text-xs text-gray-500 mt-1'>ultimos 30 dias</p>
+          </div>
+          <div className='bg-gray-900 rounded-xl p-4 border border-gray-800'>
+            <p className='text-xs text-gray-400 uppercase tracking-wider'>Sessoes</p>
+            <p className='text-2xl font-bold text-white mt-1'>{metrics ? fmtn(metrics.sessions) : '--'}</p>
+            <p className='text-xs text-gray-500 mt-1'>ultimos 30 dias</p>
+          </div>
+          <div className='bg-gray-900 rounded-xl p-4 border border-gray-800'>
+            <p className='text-xs text-gray-400 uppercase tracking-wider'>Pageviews</p>
+            <p className='text-2xl font-bold text-white mt-1'>{metrics ? fmtn(metrics.pageViews) : '--'}</p>
+            <p className='text-xs text-gray-500 mt-1'>ultimos 30 dias</p>
+          </div>
+          <div className='bg-gray-900 rounded-xl p-4 border border-gray-800'>
+            <p className='text-xs text-gray-400 uppercase tracking-wider'>Duracao Media</p>
+            <p className='text-2xl font-bold text-white mt-1'>{metrics ? fmt(metrics.avgSessionDuration) : '--'}</p>
+            <p className='text-xs text-gray-500 mt-1'>por sessao</p>
+          </div>
+        </div>
+        <Charts chartData={chartData.length > 0 ? chartData : undefined} />
       </div>
-
-      {loading && (
-        <p className="text-gray-400 text-sm animate-pulse">Buscando dados reais...</p>
-      )}
-
-      {error && (
-        <p className="bg-red-900 text-red-300 text-sm px-4 py-2 rounded-lg">{error}</p>
-      )}
-
-      <div className="grid grid-cols-4 gap-4">
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-          <p className="text-xs text-gray-400 uppercase tracking-wider">Usuários Ativos</p>
-          <p className="text-2xl font-bold text-white mt-1">
-            {metrics ? formatNumber(metrics.activeUsers) : '—'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">últimos 30 dias</p>
-        </div>
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-          <p className="text-xs text-gray-400 uppercase tracking-wider">Sessões</p>
-          <p className="text-2xl font-bold text-white mt-1">
-            {metrics ? formatNumber(metrics.sessions) : '—'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">últimos 30 dias</p>
-        </div>
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-          <p className="text-xs text-gray-400 uppercase tracking-wider">Pageviews</p>
-          <p className="text-2xl font-bold text-white mt-1">
-            {metrics ? formatNumber(metrics.pageViews) : '—'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">últimos 30 dias</p>
-        </div>
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-          <p className="text-xs text-gray-400 uppercase tracking-wider">Duração Média</p>
-          <p className="text-2xl font-bold text-white mt-1">
-            {metrics ? formatDuration(metrics.avgSessionDuration) : '—'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">por sessão</p>
-        </div>
-      </div>
-
-      <Charts chartData={chartData.length > 0 ? chartData : undefined} />
+      <AIPanel metrics={metrics} chartData={chartData} propertyName={properties[0]?.displayName} />
     </div>
   )
 }
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<div className="text-gray-400 p-6">Carregando...</div>}>
+    <Suspense fallback={<div className='text-gray-400 p-6'>Carregando...</div>}>
       <DashboardContent />
     </Suspense>
   )
