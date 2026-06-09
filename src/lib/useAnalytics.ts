@@ -13,7 +13,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const BACKEND_URL = 'http://localhost:3001'
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
 
 // Tipos dos dados que vamos receber
 interface GAMetrics {

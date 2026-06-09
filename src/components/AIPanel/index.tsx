@@ -12,7 +12,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { Sparkles, RefreshCw, TrendingUp } from 'lucide-react'
 
-const BACKEND_URL = 'http://localhost:3001'
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
 
 interface AIPanelProps {
   metrics?: {
